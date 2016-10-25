@@ -1,6 +1,6 @@
 #/usr/bin/python
 
-import base64, os, sys, urllib
+import base64, os, sys, urllib, codecs, binascii
 
 ###############################################################################
 
@@ -210,6 +210,133 @@ def b16_dec(path):
 	else:
 		print("There is something wrong with your file name!")
 
+################
+# ROT13 Encode #
+################
+
+def rot13_enc(path):
+	wf = open("operation.txt", 'w')
+	if os.path.isfile(path):
+		with open(path) as f:
+			content = f.readlines()
+			for number in content:
+				enc = codecs.encode(number, 'rot_13')
+				wf.write(enc)
+		f.close()
+		wf.close()
+		print("Done.... Data Stored in operation.txt file")
+		sys.exit(0)
+	else:
+		print("There is something wrong with your file name!")
+
+################
+# ROT13 Decode #
+################
+
+def rot13_dec(path):
+	# path = raw_input('Enter file name: - ')
+	wf = open("operation.txt", 'w')
+	if os.path.isfile(path):
+		with open(path) as f:
+			content = f.read().split('\n') 		# Have to split \n otherwise the decoder will give produce an error.
+			for number in content:
+				try:
+					dec = codecs.decode(number, 'rot_13')
+				except:
+					dec = "Not a valid operation.\n"
+				wf.write(dec+"\n")
+		f.close()
+		wf.close()
+		print("Done.... Data Stored in operation.txt file")
+		sys.exit(0)
+	else:
+		print("There is something wrong with your file name!")
+
+#############
+# UU Encode #
+#############
+
+def uu_enc(path):
+	wf = open("operation.txt", 'w')
+	if os.path.isfile(path):
+		with open(path) as f:
+			content = f.readlines()
+			for number in content:
+				enc = binascii.b2a_uu(number)
+				wf.write(enc)
+		f.close()
+		wf.close()
+		print("Done.... Data Stored in operation.txt file")
+		sys.exit(0)
+	else:
+		print("There is something wrong with your file name!")
+
+#############
+# UU Decode #
+#############
+
+def uu_dec(path):
+	# path = raw_input('Enter file name: - ')
+	wf = open("operation.txt", 'w')
+	if os.path.isfile(path):
+		with open(path) as f:
+			content = f.read().split('\n') 		# Have to split \n otherwise the decoder will give produce an error.
+			for number in content:
+				try:
+					dec = binascii.a2b_uu(number)
+				except:
+					dec = "Not a valid operation.\n"
+				wf.write(dec+"\n")
+		f.close()
+		wf.close()
+		print("Done.... Data Stored in operation.txt file")
+		sys.exit(0)
+	else:
+		print("There is something wrong with your file name!")
+
+##############
+# Hex Encode #
+##############
+
+def hex_enc(path):
+	wf = open("operation.txt", 'w')
+	if os.path.isfile(path):
+		with open(path) as f:
+			content = f.readlines()
+			for number in content:
+				enc = binascii.b2a_hex(number)
+				wf.write(enc+"\n")
+		f.close()
+		wf.close()
+		print("Done.... Data Stored in operation.txt file")
+		sys.exit(0)
+	else:
+		print("There is something wrong with your file name!")
+
+##############
+# Hex Decode #
+##############
+
+def hex_dec(path):
+	# path = raw_input('Enter file name: - ')
+	wf = open("operation.txt", 'w')
+	if os.path.isfile(path):
+		with open(path) as f:
+			content = f.read().split('\n') 		# Have to split \n otherwise the decoder will give produce an error.
+			for number in content:
+				try:
+					dec = binascii.a2b_hex(number)
+				except:
+					dec = "Not a valid operation.\n"
+				wf.write(dec)
+		f.close()
+		wf.close()
+		print("Done.... Data Stored in operation.txt file")
+		sys.exit(0)
+	else:
+		print("There is something wrong with your file name!")
+
+
 ###############################################################################################################################
 # Start of Main Program
 ###############################################################################################################################
@@ -269,7 +396,40 @@ if length != 1: 		# If arguments are provided, run this.
 				continue 										# Other wise continue.
 			i=i+1
 
+		print "\n=========================ROT13========================="
+		i=2
+		while i < length:
+			try:
+				string = str(sys.argv[i])
+				print codecs.encode(string, 'rot_13') 			# Try to Encode.
+			except:
+				i=i+1
+				continue 										# Other wise continue.
+			i=i+1
+
+		print "\n=========================UU========================="
+		i=2
+		while i < length:
+			try:
+				print binascii.b2a_uu(str(sys.argv[i])) 			# Try to Encode.
+			except:
+				i=i+1
+				continue 										# Other wise continue.
+			i=i+1
+
+		print "\n=========================Hex========================="
+		i=2
+		while i < length:
+			try:
+				print binascii.b2a_hex(str(sys.argv[i])) 			# Try to Encode.
+			except:
+				i=i+1
+				continue 										# Other wise continue.
+			i=i+1
+
 		sys.exit(0) 											# Exit after encoding.
+
+####################################### Decoding #######################################
 
 	elif sys.argv[1] == "-d":
 		print "\n=========================base64========================="
@@ -313,6 +473,41 @@ if length != 1: 		# If arguments are provided, run this.
 				continue 										# Other wise continue.
 				#print "Not a URL string"
 			i=i+1
+
+		print "\n=========================ROT13========================="
+		i=2
+		while i < length:
+			try:
+				string = str(sys.argv[i])
+				print codecs.decode(string, 'rot_13') 			# Try to Decode.
+			except:
+				i=i+1
+				continue 										# Other wise continue.
+				#print "Not a URL string"
+			i=i+1
+		
+		print "\n=========================UU========================="
+		i=2
+		while i < length:
+			try:
+				print binascii.a2b_uu(str(sys.argv[i])) 			# Try to Decode.
+			except:
+				i=i+1
+				continue 										# Other wise continue.
+				#print "Not a URL string"
+			i=i+1
+
+		print "\n=========================Hex========================="
+		i=2
+		while i < length:
+			try:
+				print binascii.a2b_hex(str(sys.argv[i])) 			# Try to Decode.
+			except:
+				i=i+1
+				continue 										# Other wise continue.
+				#print "Not a URL string"
+			i=i+1
+
 		sys.exit(0)
 
 	elif sys.argv[1] == '-h' or sys.argv[1] == '--help':
@@ -351,6 +546,9 @@ while True:
 			print("2. Base32")
 			print("3. Base16")
 			print("4. URL")
+			print("5. ROT13")
+			print("6. UU")
+			print("7. Hex")
 			print("99. For previous menu")
 			e_type=raw_input("> ")
 
@@ -390,6 +588,33 @@ while True:
 					print("There is something wrong with the file name.")
 					continue
 
+			elif e_type == "5":
+				path=raw_input("Enter file's name > ")
+				if os.path.isfile(path):
+					rot13_enc(path)
+					break
+				else:
+					print("There is something wrong with the file name.")
+					continue
+
+			elif e_type == "6":
+				path=raw_input("Enter file's name > ")
+				if os.path.isfile(path):
+					uu_enc(path)
+					break
+				else:
+					print("There is something wrong with the file name.")
+					continue
+
+			elif e_type == "7":
+				path=raw_input("Enter file's name > ")
+				if os.path.isfile(path):
+					hex_enc(path)
+					break
+				else:
+					print("There is something wrong with the file name.")
+					continue
+
 			elif e_type == "99":
 				break
 
@@ -406,6 +631,9 @@ while True:
 			print("2. Base32")
 			print("3. Base16")
 			print("4. URL")
+			print("5. ROT13")
+			print("6. ROT13")
+			print("7. Hex")
 			print("99. Previous Menu")
 			e_type=raw_input("> ")
 
@@ -440,6 +668,33 @@ while True:
 				path=raw_input("Enter file's name > ")
 				if os.path.isfile(path):
 					url_dec(path)
+					break
+				else:
+					print("There is something wrong with the file name.")
+					continue
+
+			elif e_type == "5":
+				path=raw_input("Enter file's name > ")
+				if os.path.isfile(path):
+					rot13_dec(path)
+					break
+				else:
+					print("There is something wrong with the file name.")
+					continue
+
+			elif e_type == "6":
+				path=raw_input("Enter file's name > ")
+				if os.path.isfile(path):
+					uu_dec(path)
+					break
+				else:
+					print("There is something wrong with the file name.")
+					continue
+
+			elif e_type == "7":
+				path=raw_input("Enter file's name > ")
+				if os.path.isfile(path):
+					hex_dec(path)
 					break
 				else:
 					print("There is something wrong with the file name.")
