@@ -14,7 +14,7 @@ def tool_help():
 	=======
 
 	One Encode Decode is a one stop tool for encoding and decoding solution.
-	This tool can be used in two ways ie. Interactive or command line based.
+	This tool can be used in two ways ie. Interactive and Non Interactive (command line).
 	Example: -
 	python onencdec -e my_string "Another string" -> Being the Non-Interactive mode
 	or 
@@ -24,7 +24,32 @@ def tool_help():
 	===============
 
 	-e -> For encoding the provided arguments.
+
+		-b64 -> For Base64 Encoding
+		-b32 -> For Base32 Encoding
+		-b16 -> For Base16 Encoding
+		-url -> For Url Encoding
+		-rot13 -> For rot13 Encoding
+		-uu -> For UU Encoding
+		-hex -> For hex Encoding
+			--file -> Provide the file to be encoded (Encodes the whole file).
+
+	Example: - python onencdec.py -e -b64 string "Another String"
+	Example: - python onencdec.py -e -b64 --file my_file.txt
+
 	-d -> For decoding the provided arguments.
+
+		-b64 -> For Base64 Decoding
+		-b32 -> For Base32 Decoding
+		-b16 -> For Base16 Decoding
+		-url -> For Url Decoding
+		-rot13 -> For rot13 Decoding
+		-uu -> For UU Decoding
+		-hex -> For hex Decoding
+			-file -> Provide the file to be decoded.
+
+	Example: - python onencdec.py -d -b64 c3RyaW5n QW5vdGhlciBTdHJpbmc=
+	Example: - python onencdec.py -d -b64 --file b64_enc_file.txt
 
 	Interactive
 	===========
@@ -341,15 +366,6 @@ def hex_dec(path):
 # Start of Main Program
 ###############################################################################################################################
 
-print("oooooooooooo                       oooooooooo.                       ")
-print("`888'     `8                       `888'   `Y8b                      ")
-print(" 888         ooo. .oo.    .ooooo.   888      888  .ooooo.   .ooooo.  ")
-print(" 888oooo8    `888P\"Y88b  d88' `\"Y8  888      888 d88' `88b d88' `\"Y8 ")
-print(" 888    \"     888   888  888        888      888 888ooo888 888       ")
-print(" 888       o  888   888  888   .o8  888     d88' 888    .o 888   .o8 ")
-print("o888ooooood8 o888o o888o `Y8bod8P' o888bood8P'   `Y8bod8P' `Y8bod8P' ")
-print("\n")
-
 ########################################
 # When arguments are provided run this #########################################
 ########################################
@@ -358,7 +374,137 @@ length=len(sys.argv) 	# Check the number of arguments.
 # con=str(sys.argv)
 # print sys.argv[0]
 if length != 1: 		# If arguments are provided, run this.
+########################################### Encoding ###########################################
 	if sys.argv[1] == "-e":
+########################################### Specific Encoding ###########################################
+		if sys.argv[2] == '-b64':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					print base64.encodestring(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print base64.encodestring(str(sys.argv[i])) 	# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-b32':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					print base64.b32encode(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print base64.b32encode(str(sys.argv[i])) 	# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-b16':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					print base64.b16encode(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print base64.b16encode(str(sys.argv[i])) 	# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-url':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					print urllib.quote(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print urllib.quote(str(sys.argv[i])) 	# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-rot13':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					print codecs.encode(str(data), 'rot_13')
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print codecs.encode(str(sys.argv[i]), 'rot_13') 	# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-uu':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					#print binascii.b2a_uu(str(data))
+					print(str(data)).encode('uu')
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print binascii.b2a_uu(str(sys.argv[i])) 	# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-hex':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					print binascii.b2a_hex(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print binascii.b2a_hex(str(sys.argv[i])) 	# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+########################################### All Encodings ###########################################
 		print "=========================base64========================="
 		i=2
 		while i < length:
@@ -424,14 +570,143 @@ if length != 1: 		# If arguments are provided, run this.
 				print binascii.b2a_hex(str(sys.argv[i])) 			# Try to Encode.
 			except:
 				i=i+1
-				continue 										# Other wise continue.
+				continue 											# Other wise continue.
 			i=i+1
 
-		sys.exit(0) 											# Exit after encoding.
+		sys.exit(0) 												# Exit after encoding.
 
 ####################################### Decoding #######################################
-
 	elif sys.argv[1] == "-d":
+####################################### Specific Decoding #######################################
+		if sys.argv[2] == '-b64':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					print base64.decodestring(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print base64.decodestring(str(sys.argv[i])) 	# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-b32':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read().replace("\n", "")
+					print base64.b32decode(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print base64.b32decode(str(sys.argv[i])) 		# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-b16':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read().replace("\n", "")
+					print data
+					print base64.b16decode(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print base64.b16decode(str(sys.argv[i])) 		# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-url':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read().replace("\n", "")
+					print urllib.unquote(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print urllib.unquote(str(sys.argv[i])) 	# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-rot13':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read().replace("\n", "")
+					print codecs.decode(str(data), 'rot_13')
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print codecs.decode(str(sys.argv[i]), 'rot_13') 	# Try to Encode.
+					except:
+						i=i+1
+						continue 											# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-uu':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					#print binascii.b2a_uu(str(data))
+					print(str(data)).decode('uu')
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print binascii.b2a_uu(str(sys.argv[i])) 		# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-hex':
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read().replace("\n", "")
+					print binascii.a2b_hex(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						print binascii.a2b_hex(str(sys.argv[i])) 		# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+####################################### All Decoding #######################################
 		print "\n=========================base64========================="
 		i=2
 		while i < length:
@@ -510,20 +785,31 @@ if length != 1: 		# If arguments are provided, run this.
 
 		sys.exit(0)
 
+########################################### Help ###########################################
 	elif sys.argv[1] == '-h' or sys.argv[1] == '--help':
 		tool_help()
 		
 		sys.exit(0)
-
+########################################### Wrong Syntax ###########################################
 	else:
 		print("Check your syntax.")
 		print("Do 'python onedecenc -e arg1 arg2' for encoding")
 		print("Do 'python onedecenc -d arg1 arg2' for decoding")
+		print("Type -h or --help for help")
 		sys.exit(0)
 
 ####################
 # End of Arguments ###############################################################
 ####################
+
+print("oooooooooooo                       oooooooooo.                       ")
+print("`888'     `8                       `888'   `Y8b                      ")
+print(" 888         ooo. .oo.    .ooooo.   888      888  .ooooo.   .ooooo.  ")
+print(" 888oooo8    `888P\"Y88b  d88' `\"Y8  888      888 d88' `88b d88' `\"Y8 ")
+print(" 888    \"     888   888  888        888      888 888ooo888 888       ")
+print(" 888       o  888   888  888   .o8  888     d88' 888    .o 888   .o8 ")
+print("o888ooooood8 o888o o888o `Y8bod8P' o888bood8P'   `Y8bod8P' `Y8bod8P' ")
+print("\n")
 
 print "Make sure the characters in the file are seperated with new line\n" 
 
