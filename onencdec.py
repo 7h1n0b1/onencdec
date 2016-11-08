@@ -918,7 +918,7 @@ while True:
 			print("3. Base16")
 			print("4. URL")
 			print("5. ROT13")
-			print("6. ROT13")
+			print("6. UU")
 			print("7. Hex")
 			print("99. Previous Menu")
 			e_type=raw_input("> ")
