@@ -32,7 +32,7 @@ def tool_help():
 		-rot13 -> For rot13 Encoding
 		-uu -> For UU Encoding
 		-hex -> For hex Encoding
-			--file -> Provide the file to be encoded (Encodes the whole file).
+			--file -> Provide the file to be encoded (Encodes the whole file as one).
 
 	Example: - python onencdec.py -e -b64 string "Another String"
 	Example: - python onencdec.py -e -b64 --file my_file.txt
@@ -377,7 +377,16 @@ if length != 1: 		# If arguments are provided, run this.
 ########################################### Encoding ###########################################
 	if sys.argv[1] == "-e":
 ########################################### Specific Encoding ###########################################
+		if len(sys.argv) == 2:
+			tool_help()
+			sys.exit(0)
+
 		if sys.argv[2] == '-b64':
+			
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -396,6 +405,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-b32':
+			
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -414,6 +428,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-b16':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -432,6 +451,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-url':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -450,6 +474,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-rot13':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -468,6 +497,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-uu':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -487,6 +521,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-hex':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -578,6 +617,10 @@ if length != 1: 		# If arguments are provided, run this.
 ####################################### Decoding #######################################
 	elif sys.argv[1] == "-d":
 ####################################### Specific Decoding #######################################
+		if len(sys.argv) == 2:
+			tool_help()
+			sys.exit(0)
+
 		if sys.argv[2] == '-b64':
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
@@ -597,6 +640,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-b32':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -615,6 +663,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-b16':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -634,6 +687,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-url':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -652,6 +710,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-rot13':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -670,6 +733,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-uu':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
@@ -689,6 +757,11 @@ if length != 1: 		# If arguments are provided, run this.
 				sys.exit(0)
 
 		if sys.argv[2] == '-hex':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+			
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
 				with open(file_name, 'r') as myfile:
