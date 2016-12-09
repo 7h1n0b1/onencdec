@@ -1,6 +1,6 @@
 #/usr/bin/python
 
-import base64, os, sys, urllib, codecs, binascii
+import base64, os, sys, urllib, codecs, binascii, glob
 
 ###############################################################################
 
@@ -62,6 +62,21 @@ def tool_help():
 	-> The output will be saved in "operations.txt" file.
 	'''
 	print h
+
+##################
+# Tab Completion #
+##################
+try:
+    import readline
+except ImportError:
+    print("Module readline not available.")
+
+def complete(text, state):
+    return (glob.glob(text+'*')+[None])[state]
+
+readline.set_completer_delims(' \t\n;')
+readline.parse_and_bind("tab: complete")
+readline.set_completer(complete)
 
 #################
 # Base64 Encode #
