@@ -1,6 +1,6 @@
 #/usr/bin/python
 
-import base64, os, sys, urllib, codecs, binascii, glob
+import base64, os, sys, urllib, codecs, binascii, glob, HTMLParser
 
 ###############################################################################
 
@@ -32,6 +32,7 @@ def tool_help():
 		-rot13 -> For rot13 Encoding
 		-uu -> For UU Encoding
 		-hex -> For hex Encoding
+		-html ->  For html Encoding
 			--file -> Provide the file to be encoded (Encodes the whole file as one).
 
 	Example: - python onencdec.py -e -b64 string "Another String"
@@ -46,7 +47,8 @@ def tool_help():
 		-rot13 -> For rot13 Decoding
 		-uu -> For UU Decoding
 		-hex -> For hex Decoding
-			-file -> Provide the file to be decoded.
+		-html -> For HTML Decoding
+			--file -> Provide the file to be decoded.
 
 	Example: - python onencdec.py -d -b64 c3RyaW5n QW5vdGhlciBTdHJpbmc=
 	Example: - python onencdec.py -d -b64 --file b64_enc_file.txt
@@ -59,7 +61,7 @@ def tool_help():
 	-> Fire Up the tool.
 	-> Select "1" to encode and "2" to decode.
 	-> Go through the rest of the options.
-	-> The output will be saved in "operations.txt" file.
+	-> The output will be saved in "operation.txt" file.
 	'''
 	print h
 
@@ -70,6 +72,7 @@ try:
     import readline
 except ImportError:
     print("Module readline not available.")
+    print("If you are on Windows install pyreadline")
 
 def complete(text, state):
     return (glob.glob(text+'*')+[None])[state]
@@ -362,10 +365,54 @@ def hex_dec(path):
 	wf = open("operation.txt", 'w')
 	if os.path.isfile(path):
 		with open(path) as f:
-			content = f.read().split('\n') 		# Have to split \n otherwise the decoder will give produce an error.
+			content = f.read().split('\n') 		# Have to split \n otherwise the decoder will produce an error.
 			for number in content:
 				try:
 					dec = binascii.a2b_hex(number)
+				except:
+					dec = "Not a valid operation.\n"
+				wf.write(dec)
+		f.close()
+		wf.close()
+		print("Done.... Data Stored in operation.txt file")
+		sys.exit(0)
+	else:
+		print("There is something wrong with your file name!")
+
+###############
+# HTML Encode #
+###############
+
+def html_enc(path):
+	wf = open("operation.txt", 'w')
+	if os.path.isfile(path):
+		with open(path) as f:
+			content = f.readlines()
+			for number in content:
+				enc = ''.join('&#%d;' % ord(c) for c in number)
+				wf.write(enc+"\n")
+		f.close()
+		wf.close()
+		print("Done.... Data Stored in operation.txt file")
+		sys.exit(0)
+	else:
+		print("There is something wrong with your file name!")
+
+
+##############
+# HTML Decode #
+##############
+
+def html_dec(path):
+	# path = raw_input('Enter file name: - ')
+	wf = open("operation.txt", 'w')
+	if os.path.isfile(path):
+		with open(path) as f:
+			content = f.read().split('\n') 		# Have to split \n otherwise the decoder will produce an error.
+			for number in content:
+				try:
+					h = HTMLParser.HTMLParser()
+					dec = h.unescape(number)
 				except:
 					dec = "Not a valid operation.\n"
 				wf.write(dec)
@@ -404,6 +451,11 @@ if length != 1: 		# If arguments are provided, run this.
 
 			if sys.argv[3] == '--file':
 				file_name = sys.argv[4]
+				if file_name == "operation.txt":
+					print("You are going to write in the same file you are about to read!")
+					print("This will result in an empty file as an output.")
+					file_name = raw_input("We should rename the file > ")
+
 				with open(file_name, 'r') as myfile:
 					data = myfile.read()
 					print base64.encodestring(str(data))
@@ -558,6 +610,31 @@ if length != 1: 		# If arguments are provided, run this.
 					i=i+1
 				sys.exit(0)
 
+		if sys.argv[2] == '-html':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					enc = ''.join('&#%d;' % ord(c) for c in data)
+					print enc
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						enc = ''.join('&#%d;' % ord(c) for c in str(sys.argv[i])) 	# Try to Encode.
+						print enc
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
 ########################################### All Encodings ###########################################
 		print "=========================base64========================="
 		i=2
@@ -614,7 +691,7 @@ if length != 1: 		# If arguments are provided, run this.
 				print binascii.b2a_uu(str(sys.argv[i])) 			# Try to Encode.
 			except:
 				i=i+1
-				continue 										# Other wise continue.
+				continue 											# Other wise continue.
 			i=i+1
 
 		print "\n=========================Hex========================="
@@ -622,6 +699,17 @@ if length != 1: 		# If arguments are provided, run this.
 		while i < length:
 			try:
 				print binascii.b2a_hex(str(sys.argv[i])) 			# Try to Encode.
+			except:
+				i=i+1
+				continue 											# Other wise continue.
+			i=i+1
+
+		print "\n=========================HTML========================="
+		i=2
+		while i < length:
+			try:
+				enc = ''.join('&#%d;' % ord(c) for c in str(sys.argv[i])) 	# Try to Encode.
+				print enc
 			except:
 				i=i+1
 				continue 											# Other wise continue.
@@ -794,6 +882,31 @@ if length != 1: 		# If arguments are provided, run this.
 					i=i+1
 				sys.exit(0)
 
+		if sys.argv[2] == '-html':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+			
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				h = HTMLParser.HTMLParser()
+				with open(file_name, 'r') as myfile:
+					data = myfile.read().replace("\n", "")
+					print h.unescape(str(data))
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						h = HTMLParser.HTMLParser()
+						print h.unescape(str(sys.argv[i])) 		# Try to Encode.
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
 ####################################### All Decoding #######################################
 		print "\n=========================base64========================="
 		i=2
@@ -871,6 +984,19 @@ if length != 1: 		# If arguments are provided, run this.
 				#print "Not a URL string"
 			i=i+1
 
+
+		print "\n=========================HTML========================="
+		i=2
+		while i < length:
+			try:
+				h = HTMLParser.HTMLParser()
+				print h.unescape(str(sys.argv[i])) 			# Try to Decode.
+			except:
+				i=i+1
+				continue 										# Other wise continue.
+				#print "Not a URL string"
+			i=i+1
+
 		sys.exit(0)
 
 ########################################### Help ###########################################
@@ -923,6 +1049,7 @@ while True:
 			print("5. ROT13")
 			print("6. UU")
 			print("7. Hex")
+			print("8. HTML")
 			print("99. For previous menu")
 			e_type=raw_input("> ")
 
@@ -989,6 +1116,15 @@ while True:
 					print("There is something wrong with the file name.")
 					continue
 
+			elif e_type == "8":
+				path=raw_input("Enter file's name > ")
+				if os.path.isfile(path):
+					html_enc(path)
+					break
+				else:
+					print("There is something wrong with the file name.")
+					continue
+
 			elif e_type == "99":
 				break
 
@@ -1008,6 +1144,7 @@ while True:
 			print("5. ROT13")
 			print("6. UU")
 			print("7. Hex")
+			print("8. HTML")
 			print("99. Previous Menu")
 			e_type=raw_input("> ")
 
@@ -1069,6 +1206,15 @@ while True:
 				path=raw_input("Enter file's name > ")
 				if os.path.isfile(path):
 					hex_dec(path)
+					break
+				else:
+					print("There is something wrong with the file name.")
+					continue
+
+			elif e_type == "8":
+				path=raw_input("Enter file's name > ")
+				if os.path.isfile(path):
+					html_dec(path)
 					break
 				else:
 					print("There is something wrong with the file name.")
