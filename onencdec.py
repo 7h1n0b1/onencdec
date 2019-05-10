@@ -33,6 +33,7 @@ def tool_help():
 		-uu -> For UU Encoding
 		-hex -> For hex Encoding
 		-html ->  For html Encoding
+		-bin -> For binary Encoding
 			--file -> Provide the file to be encoded (Encodes the whole file as one).
 
 	Example: - python onencdec.py -e -b64 string "Another String"
@@ -48,6 +49,7 @@ def tool_help():
 		-uu -> For UU Decoding
 		-hex -> For hex Decoding
 		-html -> For HTML Decoding
+		-bin -> For binary Decoding
 			--file -> Provide the file to be decoded.
 
 	Example: - python onencdec.py -d -b64 c3RyaW5n QW5vdGhlciBTdHJpbmc=
@@ -399,9 +401,9 @@ def html_enc(path):
 		print("There is something wrong with your file name!")
 
 
-##############
+###############
 # HTML Decode #
-##############
+###############
 
 def html_dec(path):
 	# path = raw_input('Enter file name: - ')
@@ -416,6 +418,56 @@ def html_dec(path):
 				except:
 					dec = "Not a valid operation.\n"
 				wf.write(dec)
+		f.close()
+		wf.close()
+		print("Done.... Data Stored in operation.txt file")
+		sys.exit(0)
+	else:
+		print("There is something wrong with your file name!")
+
+#################
+# Binary Encode #
+#################
+def bin_enc(path):
+	wf = open("operation.txt", 'w')
+	if os.path.isfile(path):
+		with open(path) as f:
+			content = f.readlines()
+			print content
+			for number in content:
+				#print content
+				enc = ''.join(format(ord(i),'b').zfill(8) for i in number)
+				wf.write(enc)
+		f.close()
+		wf.close()
+		print("Done.... Data Stored in operation.txt file")
+		sys.exit(0)
+	else:
+		print("There is something wrong with your file name!")
+
+
+#################
+# Binary Decode #
+#################
+def bin_dec(path):
+	# path = raw_input('Enter file name: - ')
+	wf = open("operation.txt", 'w')
+	if os.path.isfile(path):
+		with open(path) as f:
+			content = f.read() 		# Have to split \n otherwise the decoder will give produce an error.
+			binenc = str(content)
+			x = 0
+			s = []
+			enc_len = len(binenc)
+			while x < enc_len:
+				try:
+					enc_str = binenc[x:x+8]
+					s.append(enc_str)
+					x = x+8
+					dec = ''.join([chr(int(c, 2)) for c in s])
+				except:
+					dec = "Not a valid operation.\n"
+			wf.write(dec)
 		f.close()
 		wf.close()
 		print("Done.... Data Stored in operation.txt file")
@@ -635,6 +687,33 @@ if length != 1: 		# If arguments are provided, run this.
 					i=i+1
 				sys.exit(0)
 
+		if sys.argv[2] == '-bin':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read()
+					enc = ''.join(format(ord(i),'b').zfill(8) for i in data)
+					# enc = ''.join('&#%d;' % ord(c) for c in data)
+					print enc
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						enc = ''.join(format(ord(i),'b').zfill(8) for i in sys.argv[i])
+						# enc = ''.join('&#%d;' % ord(c) for c in str(sys.argv[i])) 	# Try to Encode.
+						print enc
+					except:
+						i=i+1
+						continue 										# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
 ########################################### All Encodings ###########################################
 		print "=========================base64========================="
 		i=2
@@ -717,9 +796,23 @@ if length != 1: 		# If arguments are provided, run this.
 
 		sys.exit(0) 												# Exit after encoding.
 
+		print "\n=========================Binary========================="
+		i=2
+		while i < length:
+			try:
+				enc = ''.join(format(ord(i),'b').zfill(8) for i in sys.argv[i])
+				# enc = ''.join('&#%d;' % ord(c) for c in str(sys.argv[i])) 	# Try to Encode.
+				print enc
+			except:
+				i=i+1
+				continue 											# Other wise continue.
+			i=i+1
+
+		sys.exit(0) 												# Exit after encoding.
+
 ####################################### Decoding #######################################
 	elif sys.argv[1] == "-d":
-####################################### Specific Decoding #######################################
+####################################### Specific Decoding ##############################
 		if len(sys.argv) == 2:
 			tool_help()
 			sys.exit(0)
@@ -735,7 +828,7 @@ if length != 1: 		# If arguments are provided, run this.
 				i=3
 				while i < length:
 					try:
-						print base64.decodestring(str(sys.argv[i])) 	# Try to Encode.
+						print base64.decodestring(str(sys.argv[i])) 	# Try to decode.
 					except:
 						i=i+1
 						continue 										# Other wise continue.
@@ -758,7 +851,7 @@ if length != 1: 		# If arguments are provided, run this.
 				i=3
 				while i < length:
 					try:
-						print base64.b32decode(str(sys.argv[i])) 		# Try to Encode.
+						print base64.b32decode(str(sys.argv[i])) 		# Try to decode.
 					except:
 						i=i+1
 						continue 										# Other wise continue.
@@ -782,7 +875,7 @@ if length != 1: 		# If arguments are provided, run this.
 				i=3
 				while i < length:
 					try:
-						print base64.b16decode(str(sys.argv[i])) 		# Try to Encode.
+						print base64.b16decode(str(sys.argv[i])) 		# Try to decode.
 					except:
 						i=i+1
 						continue 										# Other wise continue.
@@ -805,10 +898,10 @@ if length != 1: 		# If arguments are provided, run this.
 				i=3
 				while i < length:
 					try:
-						print urllib.unquote(str(sys.argv[i])) 	# Try to Encode.
+						print urllib.unquote(str(sys.argv[i])) 	# Try to decode.
 					except:
 						i=i+1
-						continue 										# Other wise continue.
+						continue 								# Other wise continue.
 					i=i+1
 				sys.exit(0)
 
@@ -828,7 +921,7 @@ if length != 1: 		# If arguments are provided, run this.
 				i=3
 				while i < length:
 					try:
-						print codecs.decode(str(sys.argv[i]), 'rot_13') 	# Try to Encode.
+						print codecs.decode(str(sys.argv[i]), 'rot_13') 	# Try to decode.
 					except:
 						i=i+1
 						continue 											# Other wise continue.
@@ -852,7 +945,7 @@ if length != 1: 		# If arguments are provided, run this.
 				i=3
 				while i < length:
 					try:
-						print binascii.b2a_uu(str(sys.argv[i])) 		# Try to Encode.
+						print binascii.b2a_uu(str(sys.argv[i])) 		# Try to decode.
 					except:
 						i=i+1
 						continue 										# Other wise continue.
@@ -875,7 +968,7 @@ if length != 1: 		# If arguments are provided, run this.
 				i=3
 				while i < length:
 					try:
-						print binascii.a2b_hex(str(sys.argv[i])) 		# Try to Encode.
+						print binascii.a2b_hex(str(sys.argv[i])) 		# Try to decode.
 					except:
 						i=i+1
 						continue 										# Other wise continue.
@@ -900,10 +993,51 @@ if length != 1: 		# If arguments are provided, run this.
 				while i < length:
 					try:
 						h = HTMLParser.HTMLParser()
-						print h.unescape(str(sys.argv[i])) 		# Try to Encode.
+						print h.unescape(str(sys.argv[i])) 		# Try to decode.
 					except:
 						i=i+1
-						continue 										# Other wise continue.
+						continue 								# Other wise continue.
+					i=i+1
+				sys.exit(0)
+
+		if sys.argv[2] == '-bin':
+
+			if len(sys.argv) == 3:
+				tool_help()
+				sys.exit(0)
+			
+			if sys.argv[3] == '--file':
+				file_name = sys.argv[4]
+				with open(file_name, 'r') as myfile:
+					data = myfile.read().replace("\n", "")
+				binenc = str(data)
+				x = 0
+				s = []
+				enc_len = len(binenc)
+				while x < enc_len:
+					enc_str = binenc[x:x+8]
+					s.append(enc_str)
+					x = x+8
+					dec = ''.join([chr(int(c, 2)) for c in s])
+					print dec
+				sys.exit(0)
+			else:
+				i=3
+				while i < length:
+					try:
+						binenc = str(sys.argv[i])
+						x = 0
+						s = []
+						enc_len = len(binenc)
+						while x < enc_len:
+							enc_str = binenc[x:x+8]
+							s.append(enc_str)
+							x = x+8
+							dec = ''.join([chr(int(c, 2)) for c in s])
+						print dec
+					except:
+						i=i+1
+						continue 								# Other wise continue.
 					i=i+1
 				sys.exit(0)
 
@@ -997,6 +1131,26 @@ if length != 1: 		# If arguments are provided, run this.
 				#print "Not a URL string"
 			i=i+1
 
+		print "\n=========================Binary========================="
+		i=2
+		while i < length:
+			try:
+				binenc = str(sys.argv[i])
+				x = 0
+				s = []
+				enc_len = len(binenc)
+				while x < enc_len:
+					enc_str = binenc[x:x+8]
+					s.append(enc_str)
+					x = x+8
+					dec = ''.join([chr(int(c, 2)) for c in s])
+				print dec
+			except:
+				i=i+1
+				continue 										# Other wise continue.
+				#print "Not a URL string"
+			i=i+1
+
 		sys.exit(0)
 
 ########################################### Help ###########################################
@@ -1050,6 +1204,7 @@ while True:
 			print("6. UU")
 			print("7. Hex")
 			print("8. HTML")
+			print("9. Binary")
 			print("99. For previous menu")
 			e_type=raw_input("> ")
 
@@ -1125,6 +1280,15 @@ while True:
 					print("There is something wrong with the file name.")
 					continue
 
+			elif e_type == "9":
+				path=raw_input("Enter file's name > ")
+				if os.path.isfile(path):
+					bin_enc(path)
+					break
+				else:
+					print("There is something wrong with the file name.")
+					continue
+
 			elif e_type == "99":
 				break
 
@@ -1145,6 +1309,7 @@ while True:
 			print("6. UU")
 			print("7. Hex")
 			print("8. HTML")
+			print("9. Binary")
 			print("99. Previous Menu")
 			e_type=raw_input("> ")
 
@@ -1215,6 +1380,15 @@ while True:
 				path=raw_input("Enter file's name > ")
 				if os.path.isfile(path):
 					html_dec(path)
+					break
+				else:
+					print("There is something wrong with the file name.")
+					continue
+
+			elif e_type == "9":
+				path=raw_input("Enter file's name > ")
+				if os.path.isfile(path):
+					bin_dec(path)
 					break
 				else:
 					print("There is something wrong with the file name.")
