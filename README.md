@@ -21,6 +21,7 @@ Summary
 		-uu -> For UU Encoding
 		-hex -> For hex Encoding
 		-html ->  For html Encoding
+		-bin -> For Binary Encoding
 			--file -> Provide the file to be encoded (Encodes the whole file as one).
 
 	Example: - python onencdec.py -e -b64 string "Another String"
@@ -36,6 +37,7 @@ Summary
 		-uu -> For UU Decoding
 		-hex -> For hex Decoding
 		-html -> For HTML Decoding
+		-bin -> For binary decoding
 			--file -> Provide the file to be decoded.
 
 	Example: - python onencdec.py -d -b64 c3RyaW5n QW5vdGhlciBTdHJpbmc=
