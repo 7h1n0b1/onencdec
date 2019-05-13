@@ -52,3 +52,8 @@ Summary
 	-> Select "1" to encode and "2" to decode.
 	-> Go through the rest of the options.
 	-> The output will be saved in "operation.txt" file.
+	
+Credits to: - 
+[Zero Piraeus](https://stackoverflow.com/questions/41395974/python-convert-string-to-html-char-equivalent)for HTML logic
+[Ashwini Chaudhary](https://stackoverflow.com/questions/18815820/convert-string-to-binary-in-python) for binary logic
+[tmthydvnprt](https://stackoverflow.com/questions/7396849/convert-binary-to-ascii-and-vice-versa) for binary logic
