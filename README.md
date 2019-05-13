@@ -55,7 +55,7 @@ Summary
 	
 Credits to: - 
 
-[Zero Piraeus](https://stackoverflow.com/questions/41395974/python-convert-string-to-html-char-equivalent)for HTML logic
+[Zero Piraeus](https://stackoverflow.com/questions/41395974/python-convert-string-to-html-char-equivalent) for HTML logic
 
 [Ashwini Chaudhary](https://stackoverflow.com/questions/18815820/convert-string-to-binary-in-python) for binary logic
 
